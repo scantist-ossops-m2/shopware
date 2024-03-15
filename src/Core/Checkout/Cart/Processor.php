@@ -14,6 +14,10 @@ use Shopware\Core\Framework\Script\Execution\ScriptExecutor;
 use Shopware\Core\Profiling\Profiler;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
+/**
+ * You should use `CartCalculator` to calculate the cart when you just want to calculate it
+ * The processor has a behavior parameter which is used to control the behavior of the cart calculation for different scenarios like recalculation.
+ */
 #[Package('checkout')]
 class Processor
 {

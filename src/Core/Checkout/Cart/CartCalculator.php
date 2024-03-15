@@ -2,19 +2,19 @@
 
 namespace Shopware\Core\Checkout\Cart;
 
-use Shopware\Core\Checkout\Cart\Exception\CartTokenNotFoundException;
+use Shopware\Core\Checkout\Cart\Event\CartCalculatedEvent;
 use Shopware\Core\Framework\Feature;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Profiling\Profiler;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[Package('checkout')]
 class CartCalculator
 {
     public function __construct(
         private readonly Processor $processor,
-        private readonly AbstractCartPersister $persister,
-        private readonly CartFactory $factory,
+        private readonly EventDispatcherInterface $dispatcher,
         private readonly CartRuleLoader $cartRuleLoader
     ) {
     }
@@ -22,7 +22,6 @@ class CartCalculator
     public function calculate(Cart $cart, SalesChannelContext $context): Cart
     {
         return Profiler::trace('cart-calculation', function () use ($cart, $context) {
-
             if (Feature::isActive('cache_rework')) {
                 $behavior = new CartBehavior($context->getPermissions());
 
@@ -32,6 +31,8 @@ class CartCalculator
                 foreach ($cart->getLineItems()->getFlat() as $lineItem) {
                     $lineItem->markUnmodified();
                 }
+
+                $this->dispatcher->dispatch(new CartCalculatedEvent($cart, $context));
 
                 return $cart;
             }

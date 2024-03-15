@@ -25,6 +25,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Write\Command\ChangeSetAware;
 use Shopware\Core\Framework\DataAbstractionLayer\Write\Command\DeleteCommand;
 use Shopware\Core\Framework\DataAbstractionLayer\Write\Validation\PreWriteValidationEvent;
+use Shopware\Core\Framework\Feature;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Framework\Rule\Collector\RuleConditionRegistry;
 use Shopware\Core\Framework\Uuid\Uuid;
@@ -49,6 +50,10 @@ class RuleAreaUpdater implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
+        if (Feature::isActive('cache_rework')) {
+            return [];
+        }
+
         return [
             PreWriteValidationEvent::class => 'triggerChangeSet',
             EntityWrittenContainerEvent::class => 'onEntityWritten',
@@ -110,6 +115,7 @@ class RuleAreaUpdater implements EventSubscriberInterface
 
         $this->update(array_values(Uuid::fromBytesToHexList(array_filter(array_unique($ruleIds)))));
 
+        //todo@skroblin #cache improvement#
         $this->cacheInvalidator->invalidate([CachedRuleLoader::CACHE_KEY]);
     }
 

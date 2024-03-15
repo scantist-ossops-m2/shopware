@@ -5,13 +5,15 @@
 # Context rules
 - [ ] Rules are no longer available in context object
 - [ ] Rewrite ActiveRulesDataCollectorSubscriber and show rules of the cart (if cart was loaded) > maybe via event + listener?
+- [ ] Remove duplicate scope CartRuleScope/CheckoutRuleScope 
 
 # Cart rules
 - [ ] Rules in cart will be validated after each processor
 - [ ] Attach matching rules to cart
 - [ ] Adapt classes in cart domain which rely on context.rules and change it to cart.rules
 - [ ] Remove cart rule loader
- 
+- [ ] Service dependency tree for cart services is heavy, try to reduce it and simplify it (maybe reverse route<->service pattern here)
+
 # product pricing api
 - [ ] New php class to load the product prices
 - [ ] Different scopes listing/pdp/cart
@@ -19,15 +21,16 @@
 - [ ] Rework of cheapest price updater
 - [ ] rework the cheapest price accessor builder in sql
 - [ ] Rework the cheapest price in elasticsearch
-- [ ] Price templates
+- [ ] Price twig templates and export templates
 
 # http cache 
-- [ ] Remove rules from cache key
+- [ ] Remove rules from a cache key
 - [ ] Dispatch event to calculate http cache key
-- [ ] Add cookie list to allow key extension
+- [ ] Add a cookie list to allow extending the cache-key
 - [ ] Catch event in CacheStore and Reverse proxy
 - [ ] Remove cache decorator
 - [ ] Rework cache invalidator, to optimize tags and hit invalidation count
+- [ ] Make frontend.home.page cacheable again
 
 # Store api
 - [ ] Use new `AddCacheTagEvent` event to add tags to http cache
@@ -62,6 +65,7 @@
 - [ ] Rules in flows should be allowed to query data by their own
 - [ ] Remove big data objects from flow data and migrate rules to new rule system
 - [ ] Dont restore context / order in flows to evaluate rules
+- [ ]
 
 # Theme caching
 - [ ] Rework theme caching to have one tag for all theme related stuff because of shared on each page

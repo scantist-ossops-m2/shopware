@@ -70,6 +70,9 @@ class ActiveRulesDataCollectorSubscriber extends AbstractDataCollector implement
 
     public function collect(Request $request, Response $response, ?\Throwable $exception = null): void
     {
+        if ($request->attributes->get('_esi', false)) {
+            return;
+        }
         $this->data = $this->getMatchingRules();
     }
 

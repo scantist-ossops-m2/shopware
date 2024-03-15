@@ -110,6 +110,7 @@ class SalesChannelContext extends Struct
         protected CashRoundingConfig $totalRounding,
         /**
          * todo@skroblin - Remove current usages behind feature flag
+         *
          * @deprecated tag:v6.7.0 - Context contains no more rule ids or area rule ids
          */
         protected array $areaRuleIds = []
@@ -199,6 +200,7 @@ class SalesChannelContext extends Struct
 
     /**
      * @deprecated tag:v6.7.0 - #cache_rework_rule_reason#
+     *
      * @return string[]
      */
     public function getRuleIds(): array
@@ -206,17 +208,20 @@ class SalesChannelContext extends Struct
         if (Feature::isActive('cache_rework')) {
             return [];
         }
+
         return $this->getContext()->getRuleIds();
     }
 
     /**
      * todo@skroblin - Remove current usages behind feature flag
+     *
      * @param array<string> $ruleIds
      */
     public function setRuleIds(array $ruleIds): void
     {
         if (Feature::isActive('cache_rework')) {
             $this->getContext()->setRuleIds([]);
+
             return;
         }
         $this->getContext()->setRuleIds($ruleIds);

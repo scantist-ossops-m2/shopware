@@ -115,7 +115,6 @@ class RuleAreaUpdater implements EventSubscriberInterface
 
         $this->update(array_values(Uuid::fromBytesToHexList(array_filter(array_unique($ruleIds)))));
 
-        //todo@skroblin #cache improvement#
         $this->cacheInvalidator->invalidate([CachedRuleLoader::CACHE_KEY]);
     }
 
@@ -124,6 +123,9 @@ class RuleAreaUpdater implements EventSubscriberInterface
      */
     public function update(array $ids): void
     {
+        if (Feature::isActive('cache_rework')) {
+            return;
+        }
         $associationFields = $this->getAssociationFields();
 
         $areas = $this->getAreas($ids, $associationFields);

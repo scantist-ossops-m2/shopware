@@ -172,6 +172,7 @@
 
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\CartPersister"/>
         </service>
 
         <service id="shopware.cache.reverse_proxy.redis" class="Redis">

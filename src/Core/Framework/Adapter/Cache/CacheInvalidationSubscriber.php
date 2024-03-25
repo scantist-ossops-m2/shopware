@@ -69,7 +69,6 @@ use Shopware\Core\System\SystemConfig\Event\SystemConfigChangedHook;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Shopware\Core\System\Tax\TaxDefinition;
 
-// todo@skroblin #cache improvement#
 #[Package('core')]
 class CacheInvalidationSubscriber
 {
@@ -227,19 +226,28 @@ class CacheInvalidationSubscriber
     public function invalidateCurrencyRoute(EntityWrittenContainerEvent $event): void
     {
         // invalidates the currency route when a currency changed or an assignment between the sales channel and currency changed
-        $this->cacheInvalidator->invalidate([...$this->getChangedCurrencyAssignments($event), ...$this->getChangedCurrencies($event)]);
+        $this->cacheInvalidator->invalidate([
+            ...$this->getChangedCurrencyAssignments($event),
+            ...$this->getChangedCurrencies($event)
+        ]);
     }
 
     public function invalidateLanguageRoute(EntityWrittenContainerEvent $event): void
     {
         // invalidates the language route when a language changed or an assignment between the sales channel and language changed
-        $this->cacheInvalidator->invalidate([...$this->getChangedLanguageAssignments($event), ...$this->getChangedLanguages($event)]);
+        $this->cacheInvalidator->invalidate([
+            ...$this->getChangedLanguageAssignments($event),
+            ...$this->getChangedLanguages($event)
+        ]);
     }
 
     public function invalidateCountryRoute(EntityWrittenContainerEvent $event): void
     {
         // invalidates the country route when a country changed or an assignment between the sales channel and country changed
-        $this->cacheInvalidator->invalidate([...$this->getChangedCountryAssignments($event), ...$this->getChangedCountries($event)]);
+        $this->cacheInvalidator->invalidate([
+            ...$this->getChangedCountryAssignments($event),
+            ...$this->getChangedCountries($event)
+        ]);
     }
 
     public function invalidateCountryStateRoute(EntityWrittenContainerEvent $event): void
@@ -597,6 +605,7 @@ class CacheInvalidationSubscriber
      */
     private function getProductCategoryIds(array $ids): array
     {
+        //todo@skroblin - Only listings with listing elements??
         return $this->connection->fetchFirstColumn(
             'SELECT DISTINCT LOWER(HEX(category_id)) as category_id
              FROM product_category_tree

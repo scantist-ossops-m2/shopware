@@ -78,7 +78,6 @@ class FlowPayloadUpdater
             $updated[$flowId] = ['payload' => $serialized, 'invalid' => $invalid];
         }
 
-        // todo@skroblin #cache improvement#
         $this->cacheInvalidator->invalidate([CachedFlowLoader::KEY]);
 
         return $updated;

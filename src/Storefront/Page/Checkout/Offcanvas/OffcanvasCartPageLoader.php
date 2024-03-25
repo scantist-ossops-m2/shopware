@@ -49,6 +49,7 @@ class OffcanvasCartPageLoader
 
         $page->setCart($this->cartService->get($salesChannelContext->getToken(), $salesChannelContext));
 
+        //todo@skroblin no usage??
         $page->setShippingMethods($this->getShippingMethods($salesChannelContext));
 
         $this->eventDispatcher->dispatch(

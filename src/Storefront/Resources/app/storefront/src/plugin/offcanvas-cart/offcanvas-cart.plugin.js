@@ -259,10 +259,7 @@ export default class OffCanvasCartPlugin extends Plugin {
      * @private
      */
     _fetchCartWidgets() {
-        const CartWidgetPluginInstances = window.PluginManager.getPluginInstances('CartWidget');
-        Iterator.iterate(CartWidgetPluginInstances, instance => instance.fetch());
-
-        this.$emitter.publish('fetchCartWidgets');
+        document.$emitter.publish('refresh-cart-widget');
     }
 
     /**

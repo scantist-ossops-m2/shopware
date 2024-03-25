@@ -2,6 +2,7 @@
 
 namespace Shopware\Storefront\Controller;
 
+use Doctrine\DBAL\Connection;
 use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Checkout\Customer\Exception\CustomerWishlistNotFoundException;
 use Shopware\Core\Checkout\Customer\Exception\DuplicateWishlistProductException;
@@ -12,6 +13,7 @@ use Shopware\Core\Checkout\Customer\SalesChannel\AbstractRemoveWishlistProductRo
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Framework\Routing\RoutingException;
+use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Storefront\Page\Wishlist\GuestWishlistPageLoadedHook;
@@ -48,7 +50,8 @@ class WishlistController extends StorefrontController
         private readonly AbstractMergeWishlistProductRoute $mergeWishlistProductRoute,
         private readonly GuestWishlistPageLoader $guestPageLoader,
         private readonly GuestWishlistPageletLoader $guestPageletLoader,
-        private readonly EventDispatcherInterface $eventDispatcher
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly Connection $connection
     ) {
     }
 
@@ -113,6 +116,23 @@ class WishlistController extends StorefrontController
         }
 
         return new JsonResponse($res->getProductListing()->getIds());
+    }
+
+    #[Route(path: '/wishlist/count', name: 'frontend.wishlist.count', options: ['seo' => false], defaults: ['XmlHttpRequest' => true, '_loginRequired' => true], methods: ['GET'])]
+    public function count(CustomerEntity $customer): Response
+    {
+        $productIds = $this->connection->fetchAllKeyValue(
+            'SELECT LOWER(HEX(product_id)) as array_key, LOWER(HEX(product_id)) as `value`
+             FROM customer_wishlist_product
+                 INNER JOIN customer_wishlist
+                 ON customer_wishlist_product.customer_wishlist_id = customer_wishlist.id
+             WHERE customer_wishlist.customer_id = :customerId',
+            ['customerId' => Uuid::fromHexToBytes($customer->getId())]
+        );
+
+        //todo@skroblin: Just fetch the count and not all ids, but this requires a bit more JS refactoring
+
+        return new JsonResponse($productIds);
     }
 
     #[Route(path: '/wishlist/product/delete/{id}', name: 'frontend.wishlist.product.delete', defaults: ['XmlHttpRequest' => true, '_loginRequired' => true], methods: ['POST', 'DELETE'])]

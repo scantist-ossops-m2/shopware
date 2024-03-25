@@ -3,6 +3,7 @@
 namespace Shopware\Core\Checkout\Cart;
 
 use Shopware\Core\Checkout\Cart\Event\CartCalculatedEvent;
+use Shopware\Core\Checkout\Cart\Tax\CountryTaxCalculator;
 use Shopware\Core\Framework\Feature;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Profiling\Profiler;
@@ -15,7 +16,8 @@ class CartCalculator
     public function __construct(
         private readonly Processor $processor,
         private readonly EventDispatcherInterface $dispatcher,
-        private readonly CartRuleLoader $cartRuleLoader
+        private readonly CartRuleLoader $cartRuleLoader,
+        private readonly CountryTaxCalculator $taxCalculator
     ) {
     }
 
@@ -31,6 +33,12 @@ class CartCalculator
                 foreach ($cart->getLineItems()->getFlat() as $lineItem) {
                     $lineItem->markUnmodified();
                 }
+
+                $cart = $this->taxCalculator->calculate(
+                    cart: $cart,
+                    context: $context,
+                    behavior: $behavior
+                );
 
                 $this->dispatcher->dispatch(new CartCalculatedEvent($cart, $context));
 

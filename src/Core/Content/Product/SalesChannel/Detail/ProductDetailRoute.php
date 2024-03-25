@@ -51,7 +51,7 @@ class ProductDetailRoute extends AbstractProductDetailRoute
 
     public static function buildName(string $parentId): string
     {
-        return 'product-detail-route-' . $parentId;
+        return 'product-' . $parentId;
     }
 
     public function getDecorated(): AbstractProductDetailRoute
@@ -62,7 +62,7 @@ class ProductDetailRoute extends AbstractProductDetailRoute
     #[Route(path: '/store-api/product/{productId}', name: 'store-api.product.detail', methods: ['POST'], defaults: ['_entity' => 'product'])]
     public function load(string $productId, Request $request, SalesChannelContext $context, Criteria $criteria): ProductDetailRouteResponse
     {
-        $this->dispatcher->dispatch(new AddCacheTagEvent(self::buildName($productId)));
+        $this->dispatcher->dispatch(new AddCacheTagEvent('product-' . $productId));
 
         return Profiler::trace('product-detail-route', function () use ($productId, $request, $context, $criteria) {
             $mainVariantId = $this->checkVariantListingConfig($productId, $context);

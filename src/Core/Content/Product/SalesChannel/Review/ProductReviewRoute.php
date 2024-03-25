@@ -32,7 +32,7 @@ class ProductReviewRoute extends AbstractProductReviewRoute
 
     public static function buildName(string $productId): string
     {
-        return 'product-review-route-' . $productId;
+        return 'product-' . $productId;
     }
 
     public function getDecorated(): AbstractProductReviewRoute

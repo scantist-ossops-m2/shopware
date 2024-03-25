@@ -73,6 +73,8 @@ class FooterPageletLoader implements FooterPageletLoaderInterface
         $event = new ShippingMethodRouteRequestEvent($request, new Request(), $context, $criteria);
         $this->eventDispatcher->dispatch($event);
 
+        // todo@skroblin maybe just load media??
+        // todo@skroblin reduce cache tags to `footer` (same payment method)
         return $this->shippingMethodRoute
             ->load($event->getStoreApiRequest(), $context, $event->getCriteria())
             ->getShippingMethods();

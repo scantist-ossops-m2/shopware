@@ -2,11 +2,19 @@ import HttpClient from 'src/service/http-client.service';
 import BaseWishlistStoragePlugin from 'src/plugin/wishlist/base-wishlist-storage.plugin';
 import Storage from 'src/helper/storage/storage.helper';
 import DomAccessHelper from 'src/helper/dom-access.helper';
+import Cache from 'src/helper/cache.helper';
 
 /**
  * @package checkout
  */
 export default class WishlistPersistStoragePlugin extends BaseWishlistStoragePlugin {
+    static options = {
+        countUrl: '',
+        ttl: 120000,
+    };
+
+    static key = 'sw-wishlist-cache';
+
     init() {
         super.init();
         this.httpClient = new HttpClient();
@@ -14,12 +22,25 @@ export default class WishlistPersistStoragePlugin extends BaseWishlistStoragePlu
 
     load() {
         this._merge(() => {
-            this.httpClient.get(this.options.listPath, response => {
-                this.products = JSON.parse(response);
-
+            Cache.get(WishlistPersistStoragePlugin.key, this.options.ttl, () => {
+                return this.fetchValue();
+            }).then((value) => {
+                this.products = value;
                 super.load();
+            })
+        });
+    }
+
+    fetchValue() {
+        return new Promise((resolve) => {
+            this.httpClient.get(this.options.countUrl, response => {
+                resolve(JSON.parse(response));
             });
         });
+    }
+
+    refreshCache() {
+        Cache.set(WishlistPersistStoragePlugin.key, this.options.ttl, this.products);
     }
 
     add(productId, router) {
@@ -28,6 +49,8 @@ export default class WishlistPersistStoragePlugin extends BaseWishlistStoragePlu
 
             if (res.success) {
                 super.add(productId);
+
+                this.refreshCache();
 
                 return;
             }
@@ -44,7 +67,9 @@ export default class WishlistPersistStoragePlugin extends BaseWishlistStoragePlu
                 if (res.success === false) {
                     console.warn('unable to remove product to wishlist');
                 }
+
                 super.remove(productId);
+                this.refreshCache();
 
                 return;
             }

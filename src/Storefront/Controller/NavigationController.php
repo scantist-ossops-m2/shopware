@@ -30,7 +30,7 @@ class NavigationController extends StorefrontController
     }
 
     //todo@skroblin just for testing, switch back before merge ;)
-    #[Route(path: '/', name: 'frontend.home.page', options: ['seo' => true], defaults: ['_httpCache' => false], methods: ['GET'])]
+    #[Route(path: '/', name: 'frontend.home.page', options: ['seo' => true], defaults: ['_httpCache' => true], methods: ['GET'])]
     public function home(Request $request, SalesChannelContext $context): ?Response
     {
         $page = $this->navigationPageLoader->load($request, $context);
@@ -40,8 +40,7 @@ class NavigationController extends StorefrontController
         return $this->renderStorefront('@Storefront/storefront/page/content/index.html.twig', ['page' => $page]);
     }
 
-    //todo@skroblin just for testing, switch back before merge ;)
-    #[Route(path: '/navigation/{navigationId}', name: 'frontend.navigation.page', options: ['seo' => true], defaults: ['_httpCache' => false], methods: ['GET'])]
+    #[Route(path: '/navigation/{navigationId}', name: 'frontend.navigation.page', options: ['seo' => true], defaults: ['_httpCache' => true], methods: ['GET'])]
     public function index(SalesChannelContext $context, Request $request): Response
     {
         $page = $this->navigationPageLoader->load($request, $context);

@@ -165,11 +165,6 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="Shopware\Core\Content\Product\Subscriber\InvalidateProductCacheTrigger">
-            <argument type="service" id="event_dispatcher"/>
-            <tag name="kernel.event_listener" />
-        </service>
-
         <service id="Shopware\Core\Content\Product\Stock\OrderStockSubscriber">
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="Shopware\Core\Content\Product\Stock\StockStorage"/>

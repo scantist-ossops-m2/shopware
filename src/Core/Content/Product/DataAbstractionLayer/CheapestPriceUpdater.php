@@ -29,7 +29,7 @@ class CheapestPriceUpdater
      */
     public function update(array $parentIds, Context $context): void
     {
-        //todo@skroblin, i would like to remove this updated and just calculate it on demand or better, never index it
+        // todo@skroblin, i would like to remove this updated and just calculate it on demand or better, never index it
         if (Feature::isActive('cache_rework')) {
             return;
         }

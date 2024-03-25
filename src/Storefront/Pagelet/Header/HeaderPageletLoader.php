@@ -8,6 +8,7 @@ use Shopware\Core\Content\Category\Tree\TreeItem;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
+use Shopware\Core\Framework\Feature;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Framework\Routing\RoutingException;
 use Shopware\Core\System\Currency\SalesChannel\AbstractCurrencyRoute;
@@ -109,8 +110,9 @@ class HeaderPageletLoader implements HeaderPageletLoaderInterface
 
         $criteria->addSorting(new FieldSorting('name', FieldSorting::ASCENDING));
 
-        // todo@skroblin why is this loaded here???
-        $criteria->addAssociation('productSearchConfig');
+        if (!Feature::isActive('cache_rework')) {
+            $criteria->addAssociation('productSearchConfig');
+        }
         $apiRequest = new Request();
 
         $event = new LanguageRouteRequestEvent($request, $apiRequest, $context, $criteria);

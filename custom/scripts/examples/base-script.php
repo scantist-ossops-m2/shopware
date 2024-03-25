@@ -2,8 +2,6 @@
 
 namespace Scripts\Examples;
 
-use Doctrine\DBAL\Connection;
-use Shopware\Core\HttpKernel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 

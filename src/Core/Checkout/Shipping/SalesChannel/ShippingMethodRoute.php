@@ -46,6 +46,7 @@ class ShippingMethodRoute extends AbstractShippingMethodRoute
     public function load(Request $request, SalesChannelContext $context, Criteria $criteria): ShippingMethodRouteResponse
     {
         $this->dispatcher->dispatch(new AddCacheTagEvent(
+            // just footer?
             self::buildName($context->getSalesChannelId()),
             self::ALL_TAG
         ));

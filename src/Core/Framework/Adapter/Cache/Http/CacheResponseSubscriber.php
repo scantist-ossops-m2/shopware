@@ -2,7 +2,10 @@
 
 namespace Shopware\Core\Framework\Adapter\Cache\Http;
 
+use Shopware\Core\Checkout\Cart\AbstractCartPersister;
 use Shopware\Core\Checkout\Cart\Cart;
+use Shopware\Core\Checkout\Cart\CartException;
+use Shopware\Core\Checkout\Cart\CartPersister;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Framework\Adapter\Cache\CacheStateSubscriber;
 use Shopware\Core\Framework\Adapter\Cache\Event\HttpCacheCookieEvent;
@@ -54,7 +57,8 @@ class CacheResponseSubscriber implements EventSubscriberInterface
         private readonly bool $reverseProxyEnabled,
         private readonly ?string $staleWhileRevalidate,
         private readonly ?string $staleIfError,
-        private readonly EventDispatcherInterface $dispatcher
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly AbstractCartPersister $persister
     ) {
     }
 
@@ -108,10 +112,7 @@ class CacheResponseSubscriber implements EventSubscriberInterface
             $this->setCurrencyCookie($request, $response);
         }
 
-        // todo@skroblin would be awesome to not load the cart if not necessary. Or does it no more matter, because loading the cart is just a unserialize on the database?
-        $cart = $this->cartService->getCart($context->getToken(), $context);
-
-        $states = $this->updateSystemState($cart, $context, $request, $response);
+        $states = $this->updateSystemState($context, $request, $response);
 
         // We need to allow it on login, otherwise the state is wrong
         if (!($route === 'frontend.account.login' || $request->getMethod() === Request::METHOD_GET)) {
@@ -142,17 +143,22 @@ class CacheResponseSubscriber implements EventSubscriberInterface
             $cache = [];
         }
 
-        if ($this->hasInvalidationState($cache['states'] ?? [], $states)) {
-            return;
+        if (!Feature::isActive('cache_rework')) {
+            if ($this->hasInvalidationState($cache['states'] ?? [], $states)) {
+                return;
+            }
         }
 
         $maxAge = $cache['maxAge'] ?? $this->defaultTtl;
 
         $response->setSharedMaxAge($maxAge);
-        $response->headers->set(
-            self::INVALIDATION_STATES_HEADER,
-            implode(',', $cache['states'] ?? [])
-        );
+
+        if (!Feature::isActive('cache_rework')) {
+            $response->headers->set(
+                self::INVALIDATION_STATES_HEADER,
+                implode(',', $cache['states'] ?? [])
+            );
+        }
 
         if ($this->staleIfError !== null) {
             $response->headers->addCacheControlDirective('stale-if-error', $this->staleIfError);
@@ -262,8 +268,14 @@ class CacheResponseSubscriber implements EventSubscriberInterface
      *
      * @return list<string>
      */
-    private function updateSystemState(Cart $cart, SalesChannelContext $context, Request $request, Response $response): array
+    private function updateSystemState(SalesChannelContext $context, Request $request, Response $response): array
     {
+        if (Feature::isActive('cache_rework')) {
+            return [];
+        }
+
+        $cart = $this->cartService->getCart($context->getToken(), $context);
+
         $states = $this->getSystemStates($request, $context, $cart);
 
         if (empty($states)) {

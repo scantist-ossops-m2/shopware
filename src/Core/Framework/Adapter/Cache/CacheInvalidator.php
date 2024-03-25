@@ -53,21 +53,22 @@ class CacheInvalidator
             return;
         }
 
-        //todo@skroblin - also remove tags from delayed storage
         $this->purge($tags);
     }
 
-    public function invalidateExpired(): void
+    public function invalidateExpired(): array
     {
         $tags = $this->cache->loadAndDelete();
 
         if (empty($tags)) {
-            return;
+            return $tags;
         }
 
-        $this->logger->debug(sprintf('Purged %d tags', \count($tags)));
+        $this->logger->info(sprintf('Purged %d tags', \count($tags)));
 
         $this->purge($tags);
+
+        return $tags;
     }
 
     /**

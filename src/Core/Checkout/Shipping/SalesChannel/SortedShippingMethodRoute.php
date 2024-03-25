@@ -31,6 +31,7 @@ class SortedShippingMethodRoute extends AbstractShippingMethodRoute
     #[Route(path: '/store-api/shipping-method', name: 'store-api.shipping.method', methods: ['GET', 'POST'], defaults: ['_entity' => 'shipping_method'])]
     public function load(Request $request, SalesChannelContext $context, Criteria $criteria): ShippingMethodRouteResponse
     {
+        //todo@skroblin move to shipping route
         $response = $this->getDecorated()->load($request, $context, $criteria);
 
         $response->getShippingMethods()->sortShippingMethodsByPreference($context);

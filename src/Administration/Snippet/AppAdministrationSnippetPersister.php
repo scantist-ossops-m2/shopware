@@ -87,7 +87,6 @@ class AppAdministrationSnippetPersister
         $deletedIds = array_values($existingLocales);
         $this->deleteSnippets($deletedIds, $context);
 
-        //todo@skroblin #cache improvement#
         $this->cacheInvalidator->invalidate([CachedSnippetFinder::CACHE_TAG]);
     }
 

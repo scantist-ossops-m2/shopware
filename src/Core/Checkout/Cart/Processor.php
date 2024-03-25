@@ -3,6 +3,7 @@
 namespace Shopware\Core\Checkout\Cart;
 
 use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Hook\CartHook;
 use Shopware\Core\Checkout\Cart\Price\AmountCalculator;
 use Shopware\Core\Checkout\Cart\Rule\CartRuleScope;
@@ -37,6 +38,7 @@ class Processor
         private readonly iterable $collectors,
         private readonly ScriptExecutor $executor,
         private readonly Connection $connection,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -110,6 +112,8 @@ class Processor
 
         $this->calculateAmount($context, $cart);
 
+        $cart->setRuleIds([]);
+        
         // start processing, cart will be filled step by step with line items of original cart
         foreach ($this->processors as $processor) {
             $processor->process($cart->getData(), $original, $cart, $context, $behavior);
@@ -170,7 +174,7 @@ class Processor
             try {
                 $rules[$id] = unserialize($payload);
             } catch (\Throwable $e) {
-                // todo@skroblin log rule exception
+                $this->logger->error('Could not unserialize rule', ['id' => $id, 'error' => $e->getMessage()]);
             }
         }
 

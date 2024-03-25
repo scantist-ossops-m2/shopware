@@ -38,6 +38,7 @@ class NavigationLoader implements NavigationLoaderInterface
      */
     public function load(string $activeId, SalesChannelContext $context, string $rootId, int $depth = 2): Tree
     {
+        // todo@skroblin document storage loading or at least just required data
         $request = new Request();
         $request->query->set('buildTree', 'false');
         $request->query->set('depth', (string) $depth);

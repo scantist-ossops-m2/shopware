@@ -6875,10 +6875,7 @@ parameters:
 			count: 1
 			path: src/Core/Content/Seo/SeoUrlTemplate/TemplateGroup.php
 
-		-
-			message: "#^Method Shopware\\\\Core\\\\Content\\\\Seo\\\\SeoUrlTwigFactory\\:\\:createTwigEnvironment\\(\\) has parameter \\$twigExtensions with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Core/Content/Seo/SeoUrlTwigFactory.php
+
 
 		-
 			message: "#^Method Shopware\\\\Core\\\\Content\\\\Seo\\\\SeoUrlUpdater\\:\\:fetchLanguageChains\\(\\) has parameter \\$languages with no value type specified in iterable type array\\.$#"
@@ -16925,25 +16922,7 @@ parameters:
 			count: 1
 			path: src/Core/Framework/Rule/RuleConstraints.php
 
-		-
-			message: "#^Method Shopware\\\\Core\\\\Framework\\\\Rule\\\\ScriptRule\\:\\:render\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Core/Framework/Rule/ScriptRule.php
 
-		-
-			message: "#^Method Shopware\\\\Core\\\\Framework\\\\Rule\\\\ScriptRule\\:\\:setConstraints\\(\\) has parameter \\$constraints with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Core/Framework/Rule/ScriptRule.php
-
-		-
-			message: "#^Property Shopware\\\\Core\\\\Framework\\\\Rule\\\\ScriptRule\\:\\:\\$constraints type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Core/Framework/Rule/ScriptRule.php
-
-		-
-			message: "#^Property Shopware\\\\Core\\\\Framework\\\\Rule\\\\ScriptRule\\:\\:\\$values type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Core/Framework/Rule/ScriptRule.php
 
 		-
 			message: "#^Method Shopware\\\\Core\\\\Framework\\\\Script\\\\Api\\\\ApiHook\\:\\:__construct\\(\\) has parameter \\$request with no value type specified in iterable type array\\.$#"
@@ -25513,16 +25492,6 @@ parameters:
 			path: src/Storefront/Controller/FormController.php
 
 		-
-			message: "#^Cannot call method getCity\\(\\) on Shopware\\\\Core\\\\Checkout\\\\Customer\\\\Aggregate\\\\CustomerAddress\\\\CustomerAddressEntity\\|null\\.$#"
-			count: 1
-			path: src/Storefront/Controller/NewsletterController.php
-
-		-
-			message: "#^Cannot call method getZipCode\\(\\) on Shopware\\\\Core\\\\Checkout\\\\Customer\\\\Aggregate\\\\CustomerAddress\\\\CustomerAddressEntity\\|null\\.$#"
-			count: 1
-			path: src/Storefront/Controller/NewsletterController.php
-
-		-
 			message: "#^Method Shopware\\\\Storefront\\\\Controller\\\\ScriptController\\:\\:renderStorefront\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Storefront/Controller/ScriptController.php
@@ -26121,26 +26090,6 @@ parameters:
 			message: "#^Property Shopware\\\\Storefront\\\\Test\\\\Controller\\\\CookieControllerTest\\:\\:\\$cookieController is never read, only written\\.$#"
 			count: 1
 			path: src/Storefront/Test/Controller/CookieControllerTest.php
-
-		-
-			message: "#^Cannot call method getCustomer\\(\\) on Shopware\\\\Core\\\\System\\\\SalesChannel\\\\SalesChannelContext\\|null\\.$#"
-			count: 1
-			path: src/Storefront/Test/Controller/NewsletterControllerTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$message of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\) expects string, string\\|null given\\.$#"
-			count: 2
-			path: src/Storefront/Test/Controller/NewsletterControllerTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$message of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) expects string, string\\|false given\\.$#"
-			count: 4
-			path: src/Storefront/Test/Controller/NewsletterControllerTest.php
-
-		-
-			message: "#^Property Shopware\\\\Storefront\\\\Test\\\\Controller\\\\NewsletterControllerTest\\:\\:\\$customerData type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Storefront/Test/Controller/NewsletterControllerTest.php
 
 		-
 			message: "#^Cannot call method getCustomer\\(\\) on Shopware\\\\Core\\\\System\\\\SalesChannel\\\\SalesChannelContext\\|null\\.$#"
